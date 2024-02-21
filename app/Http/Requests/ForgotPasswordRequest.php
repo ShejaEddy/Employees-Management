@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 
-class forgotPasswordRequest extends FormRequest
+class ForgotPasswordRequest extends FormRequest
 {
     public function authorize()
     {
