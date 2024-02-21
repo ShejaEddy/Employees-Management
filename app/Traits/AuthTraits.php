@@ -9,12 +9,12 @@ trait AuthTraits
     public int $expirationLimit = 120; // 2 hours
     public int $resendInterval = 2; // 2 minutes
 
-    public function generateRandomToken()
+    public function generateRandomToken(): string
     {
         return bin2hex(random_bytes(32));
     }
 
-    public function getResetTokenByEmail($email, $token_key = null)
+    public function getResetTokenByEmail(string $email, ?string $token_key = null): ?object
     {
         if (!$email) {
             return null;
@@ -31,7 +31,7 @@ trait AuthTraits
         return $token;
     }
 
-    public function createResetToken($email, $token)
+    public function createResetToken(string $email, string $token): bool
     {
         return DB::table('password_resets')->insert([
             'email' => $email,
@@ -40,12 +40,12 @@ trait AuthTraits
         ]);
     }
 
-    public function deleteResetToken($token)
+    public function deleteResetToken(object $token): bool
     {
         return $token->delete();
     }
 
-    public function checkTokenExpiry($token)
+    public function checkTokenExpiry(object $token): bool
     {
         if (!$token) {
             return true;
@@ -60,7 +60,7 @@ trait AuthTraits
         return $differenceInMinutes > $this->expirationLimit;
     }
 
-    public function checkResendInterval($token)
+    public function checkResendInterval(object $token): array
     {
         if (!$token) {
             return [

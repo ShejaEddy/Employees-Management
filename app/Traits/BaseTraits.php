@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Mail;
 trait BaseTraits
 {
 
-    public function respondSuccess($data = [], string $message = "Success", int $statusCode = 200)
+    public function respondSuccess($data = [], string $message = "Success", int $statusCode = 200): \Illuminate\Http\JsonResponse
     {
         return response($message, $statusCode)->json([
             'status' => $statusCode,
@@ -19,7 +19,7 @@ trait BaseTraits
         ]);
     }
 
-    public function respondError($errors = [], string $message = "Error", int $statusCode = 500)
+    public function respondError($errors = [], string $message = "Error", int $statusCode = 500): \Illuminate\Http\JsonResponse
     {
         return response($message, $statusCode)->json([
             'status' => $statusCode,
@@ -28,7 +28,7 @@ trait BaseTraits
         ]);
     }
 
-    public function respondExceptionError(\Exception $exception)
+    public function respondExceptionError(\Exception $exception): \Illuminate\Http\JsonResponse
     {
         return $this->respondError(
             [
@@ -42,14 +42,14 @@ trait BaseTraits
         );
     }
 
-    public function respondValidationError(Validator $validator)
+    public function respondValidationError(Validator $validator): void
     {
         throw new HttpResponseException(
             $this->respondError($validator->errors(), 'Validation failed', 422)
         );
     }
 
-    public function sendEmail($mail_class, $email, $parameters = [])
+    public function sendEmail(string $mail_class, string $email, array $parameters = []): void
     {
         if (!$mail_class) {
             throw new Exception("Missing mail class");
@@ -60,14 +60,5 @@ trait BaseTraits
         }
 
         Mail::to($email)->queue(new $mail_class(...$parameters));
-    }
-
-    public function getFirstName($names)
-    {
-        if (empty($names)) return "Unknown";
-
-        $names_arr = explode(" ", $names);
-
-        return $names_arr[0];
     }
 }
