@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Api\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ForgotPasswordRequest;
 use App\Mail\ForgotPasswordMail;
+use App\Traits\AuthTraits;
 use App\Traits\BaseTraits;
-use AuthTraits;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 
 class ForgotPasswordController extends Controller

@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers\Api\Auth;
 
-use AdminTrait;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ResetPasswordRequest;
 use App\Mail\ResetPasswordMail;
+use App\Traits\AdminTraits;
+use App\Traits\AuthTraits;
 use App\Traits\BaseTraits;
-use AuthTraits;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 
 class ResetPasswordController extends Controller
 {
-    use AuthTraits, BaseTraits, AdminTrait;
+    use AuthTraits, BaseTraits, AdminTraits;
 
     public function resetPassword(ResetPasswordRequest $request)
     {

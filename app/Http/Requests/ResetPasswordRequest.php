@@ -2,11 +2,14 @@
 
 namespace App\Http\Requests;
 
+use App\Traits\BaseTraits;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 
 class ResetPasswordRequest extends FormRequest
 {
+    use BaseTraits;
+
     public function authorize()
     {
         return true;

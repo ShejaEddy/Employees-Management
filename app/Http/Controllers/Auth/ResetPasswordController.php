@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Traits\AuthTraits;
 use App\Traits\BaseTraits;
-use AuthTraits;
 use Illuminate\Support\Facades\Request;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 

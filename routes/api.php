@@ -4,6 +4,8 @@ use App\Http\Controllers\Api\EmployeeController;
 use App\Http\Controllers\Api\AttendanceController;
 use App\Http\Controllers\Api\Auth\ForgotPasswordController;
 use App\Http\Controllers\Api\Auth\ResetPasswordController;
+use App\Http\Controllers\Api\Auth\LoginController;
+use App\Http\Controllers\Api\Auth\RegisterController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -40,4 +42,11 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('{id}/record-arrival', [AttendanceController::class, 'recordArrival'])->name('attendance.arrival');
         Route::post('{id}/record-departure', [AttendanceController::class, 'recordDeparture'])->name('attendance.departure');
     });
+});
+
+Route::fallback(function () {
+    return response()->json([
+        'status' => 404,
+        'message' => 'Route does not exists'
+    ], 404);
 });

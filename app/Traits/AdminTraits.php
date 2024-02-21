@@ -1,9 +1,11 @@
 <?php
 
+namespace App\Traits;
+
 use App\Models\Admin;
 use Facade\FlareClient\Http\Exceptions\NotFound;
 
-trait AdminTrait {
+trait AdminTraits {
     public function getAdminById(int $id, bool $throw_error = true): Admin {
         $admin = Admin::find($id);
 

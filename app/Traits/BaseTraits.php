@@ -12,20 +12,20 @@ trait BaseTraits
 
     public function respondSuccess($data = [], string $message = "Success", int $statusCode = 200): \Illuminate\Http\JsonResponse
     {
-        return response($message, $statusCode)->json([
+        return response()->json([
             'status' => $statusCode,
             'message' => $message,
             'data' => $data
-        ]);
+        ], $statusCode);
     }
 
     public function respondError($errors = [], string $message = "Error", int $statusCode = 500): \Illuminate\Http\JsonResponse
     {
-        return response($message, $statusCode)->json([
+        return response()->json([
             'status' => $statusCode,
             'message' => $message,
             'errors' => $errors
-        ]);
+        ], $statusCode);
     }
 
     public function respondExceptionError(\Exception $exception): \Illuminate\Http\JsonResponse

@@ -1,8 +1,7 @@
 <?php
+namespace App\Traits;
 
-use App\Mail\ForgotPasswordMail;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Mail;
 
 trait AuthTraits
 {
