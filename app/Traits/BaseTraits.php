@@ -2,8 +2,10 @@
 
 namespace App\Traits;
 
+use Exception;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Support\Facades\Mail;
 
 trait BaseTraits
 {
@@ -45,5 +47,27 @@ trait BaseTraits
         throw new HttpResponseException(
             $this->respondError($validator->errors(), 'Validation failed', 422)
         );
+    }
+
+    public function sendEmail($mail_class, $email, $parameters = [])
+    {
+        if (!$mail_class) {
+            throw new Exception("Missing mail class");
+        }
+
+        if (!$email) {
+            throw new Exception("Missing receiver mail");
+        }
+
+        Mail::to($email)->queue(new $mail_class(...$parameters));
+    }
+
+    public function getFirstName($names)
+    {
+        if (empty($names)) return "Unknown";
+
+        $names_arr = explode(" ", $names);
+
+        return $names_arr[0];
     }
 }

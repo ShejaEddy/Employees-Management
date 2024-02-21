@@ -9,6 +9,9 @@ class Attendance extends Model
 {
     use HasFactory;
 
+    public const ATTENDANCE_DEPARTURE_TYPE = 'Departure';
+    public const ATTENDANCE_ARRIVAL_TYPE = 'Arrival';
+
     protected $fillable = [
         'employee_id',
         'arrival_time',

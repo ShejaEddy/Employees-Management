@@ -16,6 +16,6 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('home');
 
-Route::get('/reset-password', [ResetPasswordController::class, 'index']);
+Route::get('/reset-password', [ResetPasswordController::class, 'index'])->name('admin.reset.password');

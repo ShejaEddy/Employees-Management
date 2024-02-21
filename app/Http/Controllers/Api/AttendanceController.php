@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Mail\EmployeeAttendanceRecordMail;
 use App\Models\Attendance;
 use App\Models\Employee;
 use App\Traits\AttendanceTraits;
@@ -33,7 +34,7 @@ class AttendanceController extends Controller
                 'arrival_time' => now(),
             ]);
 
-            $this->sendAttendanceEmail($employee, 'arrival');
+            $this->sendAttendanceEmail($employee, Attendance::ATTENDANCE_ARRIVAL_TYPE);
 
             return $this->respondSuccess($attendance, 'Arrival recorded successfully', 201);
         } catch (\Exception $exception) {
@@ -70,7 +71,7 @@ class AttendanceController extends Controller
                 'departure_time' => now(),
             ]);
 
-            $this->sendAttendanceEmail($employee, 'departure');
+            $this->sendAttendanceEmail($employee, Attendance::ATTENDANCE_DEPARTURE_TYPE);
 
             return $this->respondSuccess($attendance, 'Arrival recorded successfully', 201);
         } catch (\Exception $exception) {
@@ -78,11 +79,12 @@ class AttendanceController extends Controller
         }
     }
 
-    private function sendAttendanceEmail(Employee $employee, $type)
+    private function sendAttendanceEmail(Employee $employee, string $type)
     {
-        // You need to define your mail logic here, possibly using Laravel Mailables and queues
-        // For simplicity, let's assume you have a Mailable named AttendanceNotification
+        $name = $this->getFirstName($employee->names);
+        $email = $employee->email;
+        $time = now()->format('h:i A');
 
-        // Mail::to($employee->email)->queue(new AttendanceNotification($employee, $type));
+        $this->sendEmail(EmployeeAttendanceRecordMail::class, $email, [$name, $type, $time]);
     }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Auth;
 use AdminTrait;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ResetPasswordRequest;
+use App\Mail\ResetPasswordMail;
 use App\Traits\BaseTraits;
 use AuthTraits;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
@@ -38,7 +39,7 @@ class ResetPasswordController extends Controller
 
             $this->deleteResetToken($token);
 
-            // TODO: Send email to user that password has been reset
+            $this->sendEmail(ResetPasswordMail::class, $email);
 
             return $this->respondSuccess([], 'Password reset successfully');
         } catch (\Exception $exception) {

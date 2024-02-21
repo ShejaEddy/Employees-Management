@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ForgotPasswordRequest;
+use App\Mail\ForgotPasswordMail;
 use App\Traits\BaseTraits;
 use AuthTraits;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
@@ -35,7 +36,7 @@ class ForgotPasswordController extends Controller
 
             $this->createResetToken($email, $randomToken);
 
-            // TODO: Send email with reset link
+            $this->sendEmail(ForgotPasswordMail::class, $email, [$randomToken, $email]);
 
             return $this->respondSuccess([], "Password reset link has been sent to your $email. Check your email to reset your password.");
         } catch (\Exception $exception) {
