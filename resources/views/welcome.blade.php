@@ -11,15 +11,15 @@
 </head>
 
 <body>
-    <div class="container bg-light min-h-screen">
-        <div class="row">
+    <div class="container bg-light min-h-screen p-5">
+        <div class="row mt-5">
             <div class="col-md-12">
                 <h1 class="text-center">Employee Management System API</h1>
             </div>
         </div>
-        <div class="row">
+        <div class="row mt-5">
             <div class="col-md-12">
-                <h1 class="text-center"><i class="fas fa-home"></i> Welcome guys 😉</h1>
+                <h4 class="text-center"><i class="fas fa-home"></i> Welcome guys 😉</h1>
             </div>
         </div>
     </div>

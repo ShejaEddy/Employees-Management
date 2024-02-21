@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Attendance;
 use Illuminate\Database\Seeder;
 
 class AttendanceSeeder extends Seeder
@@ -13,6 +14,6 @@ class AttendanceSeeder extends Seeder
      */
     public function run()
     {
-        //
+        Attendance::factory(10)->create();
     }
 }
