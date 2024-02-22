@@ -10,7 +10,7 @@ trait AdminTraits {
         $admin = Admin::find($id);
 
         if (empty($admin) && $throw_error){
-            throw new NotFound("Admin not found");
+            throw new NotFound("Admin not found", 404);
         }
 
         return $admin;
@@ -20,7 +20,7 @@ trait AdminTraits {
         $admin = Admin::where('email', $email)->first();
 
         if (empty($admin) && $throw_error){
-            throw new NotFound("Admin not found");
+            throw new NotFound("Admin not found", 404);
         }
 
         return $admin;

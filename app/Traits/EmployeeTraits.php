@@ -11,7 +11,7 @@ trait EmployeeTraits {
         $employee = Employee::find($id);
 
         if (empty($employee) && $throw_error){
-            throw new NotFound("Employee not found");
+            throw new NotFound("Employee not found", 404);
         }
 
         return $employee;

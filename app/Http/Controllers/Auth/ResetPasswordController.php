@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Traits\AuthTraits;
 use App\Traits\BaseTraits;
-use Illuminate\Support\Facades\Request;
+use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 
 class ResetPasswordController extends Controller
@@ -21,13 +21,13 @@ class ResetPasswordController extends Controller
             $token = $this->getResetTokenByEmail($email, $token_str);
 
             if (!$token) {
-                throw new BadRequestException('Invalid token');
+                throw new BadRequestException('Invalid token', 400);
             }
 
             $is_expired = $this->checkTokenExpiry($token);
 
             if ($is_expired) {
-                throw new BadRequestException('Token has expired, request a new one');
+                throw new BadRequestException('Token has expired, request a new one', 400);
             }
 
             return view('auth.reset-password')->with([

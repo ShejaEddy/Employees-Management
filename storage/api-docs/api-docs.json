@@ -1,0 +1,1449 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Employee Management System API",
+        "description": "This is the API documentation for the Employee Management System",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/": {
+            "get": {
+                "tags": [
+                    "Home"
+                ],
+                "description": "Welcome message",
+                "operationId": "4bbcb0e4848a6f64cdf23242680085dd",
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/WelcomeResponse"
+                    }
+                }
+            }
+        },
+        "/api/employees/{employee_id}/attendance": {
+            "post": {
+                "tags": [
+                    "Attendance"
+                ],
+                "description": "Record an employee's arrival",
+                "operationId": "987592fdf668ad125c590b4bb17b0d1c",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/EmployeeId"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/RecordAttendanceSuccess"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/ArrivalAlreadyRecorded"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/InternalServerError"
+                    }
+                }
+            }
+        },
+        "/api/employees/{employee_id}/attendance/departure": {
+            "post": {
+                "tags": [
+                    "Attendance"
+                ],
+                "description": "Record an employee's departure",
+                "operationId": "89411dc47104ef99a18e618e958073b2",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/EmployeeId"
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "$ref": "#/components/responses/RecordAttendanceSuccess"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/DepartureAlreadyRecorded"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/InternalServerError"
+                    }
+                }
+            }
+        },
+        "/api/attendance": {
+            "get": {
+                "tags": [
+                    "Attendance"
+                ],
+                "description": "Download the attendance report in excel format",
+                "operationId": "a44082055566ec78c71a2d880e073cff",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/from"
+                    },
+                    {
+                        "$ref": "#/components/parameters/to"
+                    },
+                    {
+                        "$ref": "#/components/parameters/limit"
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "$ref": "#/components/responses/InvalidDateRangeResponse"
+                    },
+                    "200": {
+                        "description": "Excel report downloaded successfully",
+                        "content": {
+                            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "binary"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/InternalServerError"
+                    }
+                }
+            }
+        },
+        "/api/attendance/pdf": {
+            "get": {
+                "tags": [
+                    "Attendance"
+                ],
+                "description": "Download the attendance report in pdf format",
+                "operationId": "94369078a8a9ea6778e1705ff2fc01d4",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/from"
+                    },
+                    {
+                        "$ref": "#/components/parameters/to"
+                    },
+                    {
+                        "$ref": "#/components/parameters/limit"
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "$ref": "#/components/responses/InvalidDateRangeResponse"
+                    },
+                    "200": {
+                        "description": "PDF report downloaded successfully",
+                        "content": {
+                            "application/pdf": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "binary"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/InternalServerError"
+                    }
+                }
+            }
+        },
+        "/api/admins/forgot-password": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "description": "Request a password reset",
+                "operationId": "a8388befb056b3dd76ff1a97d2873fa2",
+                "requestBody": {
+                    "description": "Admin email",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ForgotPasswordRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/ForgotPasswordSuccess"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/ForgotPasswordReject"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/InternalServerError"
+                    }
+                }
+            }
+        },
+        "/api/admins/login": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "description": "Login an admin",
+                "operationId": "35417c520204177eaf26e03a2dd437b7",
+                "requestBody": {
+                    "description": "Admin credentials",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/LoginRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "422": {
+                        "$ref": "#/components/responses/LoginValidationErrorResponse"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/InvalidLogin"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/InternalServerError"
+                    },
+                    "200": {
+                        "$ref": "#/components/responses/LoginSuccess"
+                    }
+                }
+            }
+        },
+        "/api/admins/register": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "description": "Register an admin",
+                "operationId": "0d5d8f04a1a52ab8b17d75bade81b70f",
+                "requestBody": {
+                    "description": "Admin credentials",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RegisterRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "422": {
+                        "$ref": "#/components/responses/RegisterValidationError"
+                    },
+                    "200": {
+                        "$ref": "#/components/responses/RegisterSuccess"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/InternalServerError"
+                    }
+                }
+            }
+        },
+        "/api/admins/reset-password": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "description": "Reset admin password",
+                "operationId": "7c2a2172588d3b62636b605baa3b192a",
+                "requestBody": {
+                    "description": "Admin email, password and token",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ResetPasswordRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/ResetPasswordSuccess"
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/InvalidTokenOrExpiredError"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/InternalServerError"
+                    }
+                }
+            }
+        },
+        "/api/employees": {
+            "get": {
+                "tags": [
+                    "Employees"
+                ],
+                "description": "Fetch all employees",
+                "operationId": "ede932cb6e7161a5520a90901e3a1270",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/PageNumber"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PageLimit"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Employees fetched successfully.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GetAllEmployeesResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/InternalServerError"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Employees"
+                ],
+                "description": "Create an employee",
+                "operationId": "a5af921aac4bf43d4d5e7caeeea41795",
+                "requestBody": {
+                    "description": "Employee details",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StoreEmployeeRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "$ref": "#/components/responses/StoreEmployeeSuccess"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/InternalServerError"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Unauthenticated"
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/StoreEmployeeRequestValidation"
+                    }
+                }
+            }
+        },
+        "/api/employees/{id}": {
+            "get": {
+                "tags": [
+                    "Employees"
+                ],
+                "description": "Fetch an employee",
+                "operationId": "3d4148e9afa2fa52d618e8935f33ed83",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/EmployeeId"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/EmployeeFetchSuccess"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/InternalServerError"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Unauthenticated"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Employees"
+                ],
+                "summary": "Update an (PUT/PATCH)",
+                "description": "Update an employee by ID. This endpoint supports both PUT and PATCH requests.",
+                "operationId": "55e1ceec679a0d1436c869735e984a83",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/EmployeeId"
+                    }
+                ],
+                "requestBody": {
+                    "description": "Employee details",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateEmployeeRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/EmployeeFetchSuccess"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/InternalServerError"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Unauthenticated"
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/StoreEmployeeRequestValidation"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Employees"
+                ],
+                "description": "Delete an employee",
+                "operationId": "00c3138566163aa6d741a37971022e5c",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/EmployeeId"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/DeleteEmployeeSuccess"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/InternalServerError"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Unauthenticated"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Admin": {
+                "title": "Admin",
+                "description": "Admin user schema",
+                "required": [
+                    "name",
+                    "email",
+                    "password"
+                ],
+                "properties": {
+                    "id": {
+                        "description": "The id of the admin",
+                        "type": "integer"
+                    },
+                    "name": {
+                        "description": "The name of the admin",
+                        "type": "string"
+                    },
+                    "email": {
+                        "description": "The email of the admin",
+                        "type": "string",
+                        "format": "email"
+                    },
+                    "created_at": {
+                        "description": "The date and time the admin was created",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "description": "The date and time the admin was updated",
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object",
+                "example": {
+                    "name": "Sheja Eddy",
+                    "email": "admin@example.com",
+                    "updated_at": "2024-10-10T12:00:00+00:00",
+                    "created_at": "2024-10-10T12:00:00+00:00"
+                }
+            },
+            "Attendance": {
+                "title": "Attendance",
+                "description": "Attendance model schema",
+                "properties": {
+                    "id": {
+                        "description": "The id of the attendance",
+                        "type": "integer"
+                    },
+                    "employee_id": {
+                        "description": "The id of the employee",
+                        "type": "integer"
+                    },
+                    "arrival_time": {
+                        "description": "The arrival time of the employee",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "departure_time": {
+                        "description": "The departure time of the employee",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "created_at": {
+                        "description": "The date and time the attendance was created",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "description": "The date and time the attendance was updated",
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "Employee": {
+                "title": "Employee",
+                "description": "Employee schema",
+                "required": [
+                    "names",
+                    "email",
+                    "phone_number",
+                    "badge_id"
+                ],
+                "properties": {
+                    "id": {
+                        "description": "The id of the employee",
+                        "type": "integer"
+                    },
+                    "names": {
+                        "description": "The names of the employee",
+                        "type": "string"
+                    },
+                    "email": {
+                        "description": "The email of the employee",
+                        "type": "string",
+                        "format": "email"
+                    },
+                    "phone_number": {
+                        "description": "The phone number of the employee",
+                        "type": "string"
+                    },
+                    "badge_id": {
+                        "description": "The badge id of the employee",
+                        "type": "string"
+                    },
+                    "created_at": {
+                        "description": "The date and time the employee was created",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "description": "The date and time the employee was updated",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "deleted_at": {
+                        "description": "The date and time the employee was deleted",
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object",
+                "example": {
+                    "names": "Sheja Eddy",
+                    "email": "sheja@eddy.com",
+                    "phone_number": "250784141587",
+                    "badge_id": "SH123456"
+                }
+            },
+            "ForgotPasswordRequest": {
+                "required": [
+                    "email"
+                ],
+                "properties": {
+                    "email": {
+                        "description": "The email of the admin",
+                        "type": "string",
+                        "format": "email",
+                        "example": "sheja@eddy.com"
+                    }
+                },
+                "type": "object"
+            },
+            "GetAllEmployeesResponse": {
+                "properties": {
+                    "status": {
+                        "type": "integer",
+                        "example": 200
+                    },
+                    "message": {
+                        "type": "string",
+                        "example": "Employees fetched successfully"
+                    },
+                    "data": {
+                        "properties": {
+                            "current_page": {
+                                "type": "integer",
+                                "example": 1
+                            },
+                            "data": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/Employee"
+                                }
+                            },
+                            "first_page_url": {
+                                "type": "string",
+                                "example": "http://localhost:8000/api/employees?page=1"
+                            },
+                            "from": {
+                                "type": "integer",
+                                "example": 1
+                            },
+                            "last_page": {
+                                "type": "integer",
+                                "example": 2
+                            },
+                            "last_page_url": {
+                                "type": "string",
+                                "example": "http://localhost:8000/api/employees?page=2"
+                            },
+                            "next_page_url": {
+                                "type": "string",
+                                "example": "http://localhost:8000/api/employees?page=2"
+                            },
+                            "path": {
+                                "type": "string",
+                                "example": "http://localhost:8000/api/employees"
+                            },
+                            "per_page": {
+                                "type": "integer",
+                                "example": 5
+                            },
+                            "prev_page_url": {
+                                "type": "string",
+                                "example": "http://localhost:8000/api/employees?page=1"
+                            },
+                            "to": {
+                                "type": "integer",
+                                "example": 5
+                            },
+                            "total": {
+                                "type": "integer",
+                                "example": 6
+                            }
+                        },
+                        "type": "object"
+                    }
+                },
+                "type": "object"
+            },
+            "LoginRequest": {
+                "required": [
+                    "email",
+                    "password"
+                ],
+                "properties": {
+                    "email": {
+                        "description": "The email of the admin",
+                        "type": "string",
+                        "format": "email",
+                        "example": "admin@example.com"
+                    },
+                    "password": {
+                        "description": "The password of the admin",
+                        "type": "string",
+                        "format": "password",
+                        "example": "password"
+                    }
+                },
+                "type": "object"
+            },
+            "RegisterRequest": {
+                "required": [
+                    "name",
+                    "email",
+                    "password"
+                ],
+                "properties": {
+                    "name": {
+                        "description": "The name of the admin",
+                        "type": "string",
+                        "example": "Sheja Eddy"
+                    },
+                    "email": {
+                        "description": "The email of the admin",
+                        "type": "string",
+                        "format": "email",
+                        "example": "admin@example.com"
+                    },
+                    "password": {
+                        "description": "The password of the admin",
+                        "type": "string",
+                        "format": "password",
+                        "example": "password"
+                    },
+                    "password_confirmation": {
+                        "description": "Confirm password",
+                        "type": "string",
+                        "format": "password",
+                        "example": "password"
+                    }
+                },
+                "type": "object"
+            },
+            "ResetPasswordRequest": {
+                "required": [
+                    "email",
+                    "password",
+                    "token"
+                ],
+                "properties": {
+                    "email": {
+                        "description": "The email of the admin",
+                        "type": "string",
+                        "format": "email",
+                        "example": "sheja@eddy.com"
+                    },
+                    "password": {
+                        "description": "The new password of the admin",
+                        "type": "string",
+                        "format": "password",
+                        "example": "password"
+                    },
+                    "password_confirmation": {
+                        "description": "Confirm Password",
+                        "type": "string",
+                        "format": "password",
+                        "example": "password"
+                    },
+                    "token": {
+                        "description": "The reset token sent to the admin's email",
+                        "type": "string",
+                        "example": "d3b3c4d3-4b3d-4c3d-4b3d-4c3d4b3d4c3d"
+                    }
+                },
+                "type": "object"
+            },
+            "StoreEmployeeRequest": {
+                "required": [
+                    "names",
+                    "email",
+                    "badge_id",
+                    "phone_number"
+                ],
+                "properties": {
+                    "names": {
+                        "description": "The names of the employee",
+                        "type": "string",
+                        "example": "Sheja Eddy"
+                    },
+                    "email": {
+                        "description": "The email of the employee",
+                        "type": "string",
+                        "format": "email",
+                        "example": "sheja@eddy.com"
+                    },
+                    "badge_id": {
+                        "description": "The badge id of the employee",
+                        "type": "string",
+                        "example": "SH123456"
+                    },
+                    "phone_number": {
+                        "description": "The phone number of the employee",
+                        "type": "string",
+                        "example": "250784141587"
+                    }
+                },
+                "type": "object"
+            },
+            "UpdateEmployeeRequest": {
+                "required": [],
+                "properties": {
+                    "names": {
+                        "description": "The names of the employee",
+                        "type": "string",
+                        "example": "Sheja Eddy"
+                    },
+                    "email": {
+                        "description": "The email of the employee",
+                        "type": "string",
+                        "format": "email",
+                        "example": "sheja@eddy.com"
+                    },
+                    "badge_id": {
+                        "description": "The badge id of the employee",
+                        "type": "string",
+                        "example": "SH123456"
+                    },
+                    "phone_number": {
+                        "description": "The phone number of the employee",
+                        "type": "string",
+                        "example": "250784141587"
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "responses": {
+            "ArrivalAlreadyRecorded": {
+                "description": "If the attendance for arrival is already recorded for the employee today",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "properties": {
+                                "status": {
+                                    "type": "integer",
+                                    "example": 400
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "example": "Arrival already recorded for the employee today"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+            "DeleteEmployeeSuccess": {
+                "description": "Employee deleted successfully",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "required": [
+                                "status",
+                                "message"
+                            ],
+                            "properties": {
+                                "status": {
+                                    "description": "The status of the response",
+                                    "type": "integer",
+                                    "example": 200
+                                },
+                                "message": {
+                                    "description": "The message of the response",
+                                    "type": "string",
+                                    "example": "Employee deleted successfully"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+            "DepartureAlreadyRecorded": {
+                "description": "If the departure for the employee is already recorded today or no arrival recorded for the employee",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "properties": {
+                                "status": {
+                                    "type": "integer",
+                                    "example": 400
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "example": "Departure already recorded for the employee today or no arrival recorded for the employee"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+            "EmployeeFetchSuccess": {
+                "description": "Employee details fetched successfully",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "required": [
+                                "status",
+                                "message",
+                                "data"
+                            ],
+                            "properties": {
+                                "status": {
+                                    "description": "The status of the response",
+                                    "type": "integer",
+                                    "example": 200
+                                },
+                                "message": {
+                                    "description": "The message of the response",
+                                    "type": "string",
+                                    "example": "Employee details fetched successfully"
+                                },
+                                "data": {
+                                    "$ref": "#/components/schemas/Employee"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+            "ForgotPasswordReject": {
+                "description": "Bad request",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "properties": {
+                                "status": {
+                                    "description": "The status of the response",
+                                    "type": "integer",
+                                    "example": 400
+                                },
+                                "message": {
+                                    "description": "The message of the response",
+                                    "type": "string",
+                                    "example": "You can only request a new password reset after 120 seconds"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+            "ForgotPasswordSuccess": {
+                "description": "Success",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "properties": {
+                                "status": {
+                                    "description": "The status of the response",
+                                    "type": "integer",
+                                    "example": 200
+                                },
+                                "message": {
+                                    "description": "The message of the response",
+                                    "type": "string",
+                                    "example": "Password reset link has been sent to your email. Check your email to reset your password."
+                                },
+                                "data": {
+                                    "description": "The data of the response",
+                                    "type": "object"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+            "InternalServerError": {
+                "description": "Internal server error",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "required": [
+                                "status",
+                                "message"
+                            ],
+                            "properties": {
+                                "status": {
+                                    "description": "The status of the response",
+                                    "type": "integer",
+                                    "example": 500
+                                },
+                                "message": {
+                                    "description": "The message of the response",
+                                    "type": "string",
+                                    "example": "Internal server error"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+            "InvalidDateRangeResponse": {
+                "description": "Invalid date if 'from' or 'to' is in query but not in the right format",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "properties": {
+                                "status": {
+                                    "type": "integer",
+                                    "example": 400
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "example": "Invalid date"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+            "InvalidLogin": {
+                "description": "Invalid credentials, try again",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "properties": {
+                                "status": {
+                                    "type": "integer",
+                                    "example": 401
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "example": "Invalid credentials, try again"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+            "InvalidTokenOrExpiredError": {
+                "description": "Invalid token or token has expired",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "properties": {
+                                "status": {
+                                    "type": "integer",
+                                    "example": 403
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "example": "Invalid token or token has expired"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+            "LoginSuccess": {
+                "description": "Admin logged in successfully",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "properties": {
+                                "status": {
+                                    "type": "integer",
+                                    "example": 200
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "example": "Admin logged in successfully"
+                                },
+                                "data": {
+                                    "properties": {
+                                        "user": {
+                                            "$ref": "#/components/schemas/Admin"
+                                        },
+                                        "token": {
+                                            "type": "string",
+                                            "example": "1|fXhVxEUyT3oTqjFDTfVMjn8D1Qy3Obq1VLJCMn7K"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+            "LoginValidationErrorResponse": {
+                "description": "Validation failed",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "properties": {
+                                "status": {
+                                    "type": "integer",
+                                    "example": 422
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "example": "Validation failed"
+                                },
+                                "errors": {
+                                    "properties": {
+                                        "email": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string",
+                                                "example": "The email address field is required"
+                                            }
+                                        },
+                                        "password": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string",
+                                                "example": "The password field is required"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+            "NotFound": {
+                "description": "Resource not found",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "required": [
+                                "status",
+                                "message"
+                            ],
+                            "properties": {
+                                "status": {
+                                    "description": "The status of the response",
+                                    "type": "integer",
+                                    "example": 404
+                                },
+                                "message": {
+                                    "description": "The message of the response",
+                                    "type": "string",
+                                    "example": "Resource not found"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+            "RecordAttendanceSuccess": {
+                "description": "Attendance recorded successfully",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "properties": {
+                                "status": {
+                                    "type": "integer",
+                                    "example": 201
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "example": "Attendance recorded successfully"
+                                },
+                                "data": {
+                                    "$ref": "#/components/schemas/Attendance"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+            "RegisterSuccess": {
+                "description": "Success",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "properties": {
+                                "status": {
+                                    "type": "integer",
+                                    "example": 200
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "example": "Success"
+                                },
+                                "data": {
+                                    "properties": {
+                                        "user": {
+                                            "$ref": "#/components/schemas/Admin"
+                                        },
+                                        "token": {
+                                            "description": "The token of the registered admin",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+            "RegisterValidationError": {
+                "description": "Validation failed",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "properties": {
+                                "status": {
+                                    "type": "integer",
+                                    "example": 422
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "example": "Validation failed"
+                                },
+                                "errors": {
+                                    "properties": {
+                                        "name": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string",
+                                                "example": "The name field is required"
+                                            }
+                                        },
+                                        "email": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string",
+                                                "example": "The email address is already in use"
+                                            }
+                                        },
+                                        "password": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string",
+                                                "example": "Passwords do not match"
+                                            }
+                                        },
+                                        "password_confirmation": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string",
+                                                "example": "The password confirmation field is required"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+            "ResetPasswordSuccess": {
+                "description": "Success",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "properties": {
+                                "status": {
+                                    "description": "The status of the response",
+                                    "type": "integer",
+                                    "example": 200
+                                },
+                                "message": {
+                                    "description": "The message of the response",
+                                    "type": "string",
+                                    "example": "Password reset successfully"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+            "StoreEmployeeRequestValidation": {
+                "description": "Validation failed",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "properties": {
+                                "status": {
+                                    "type": "integer",
+                                    "example": 422
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "example": "Validation failed"
+                                },
+                                "errors": {
+                                    "properties": {
+                                        "names": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string",
+                                                "example": "The names field is required"
+                                            }
+                                        },
+                                        "email": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string",
+                                                "example": "The email address is already in use"
+                                            }
+                                        },
+                                        "badge_id": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string",
+                                                "example": "The badge ID is already in use"
+                                            }
+                                        },
+                                        "phone_number": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string",
+                                                "example": "The phone number field is already in use"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+            "StoreEmployeeSuccess": {
+                "description": "Employee created successfully",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "required": [
+                                "status",
+                                "message",
+                                "data"
+                            ],
+                            "properties": {
+                                "status": {
+                                    "description": "The status of the response",
+                                    "type": "integer",
+                                    "example": 201
+                                },
+                                "message": {
+                                    "description": "The message of the response",
+                                    "type": "string",
+                                    "example": "Employee created successfully"
+                                },
+                                "data": {
+                                    "$ref": "#/components/schemas/Employee"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+            "Unauthenticated": {
+                "description": "Unauthorized access",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "properties": {
+                                "status": {
+                                    "type": "integer",
+                                    "example": 401
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "example": "Unauthorized access, please login."
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+            "WelcomeResponse": {
+                "description": "Welcome message",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "properties": {
+                                "status": {
+                                    "description": "The status of the response",
+                                    "type": "integer",
+                                    "example": 200
+                                },
+                                "message": {
+                                    "description": "The message of the response",
+                                    "type": "string",
+                                    "example": "Welcome to our Employee Management System API"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                }
+            }
+        },
+        "parameters": {
+            "PageLimit": {
+                "name": "PageLimit",
+                "in": "query",
+                "description": "The number of items per page",
+                "required": false,
+                "schema": {
+                    "type": "integer",
+                    "default": 10
+                }
+            },
+            "PageNumber": {
+                "name": "PageNumber",
+                "in": "query",
+                "description": "The page number",
+                "required": false,
+                "schema": {
+                    "type": "integer",
+                    "default": 1
+                }
+            },
+            "from": {
+                "name": "from",
+                "in": "query",
+                "description": "The start date of the report",
+                "required": false,
+                "schema": {
+                    "type": "string",
+                    "format": "date",
+                    "example": "2021-01-01"
+                }
+            },
+            "to": {
+                "name": "to",
+                "in": "query",
+                "description": "The end date of the report",
+                "required": false,
+                "schema": {
+                    "type": "string",
+                    "format": "date",
+                    "example": "2021-12-31"
+                }
+            },
+            "limit": {
+                "name": "limit",
+                "in": "query",
+                "description": "The limit of the report, by default 20",
+                "required": false,
+                "schema": {
+                    "type": "integer",
+                    "example": 20
+                }
+            },
+            "EmployeeId": {
+                "name": "EmployeeId",
+                "in": "path",
+                "description": "Employee id parameter",
+                "required": true,
+                "schema": {
+                    "type": "integer",
+                    "example": 1
+                }
+            }
+        }
+    }
+}

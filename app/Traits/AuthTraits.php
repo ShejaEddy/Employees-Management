@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\DB;
 trait AuthTraits
 {
     public int $expirationLimit = 120; // 2 hours
-    public int $resendInterval = 2; // 2 minutes
+    public int $resendInterval = 1; // 1 minutes
 
     public function generateRandomToken(): string
     {
@@ -41,7 +41,14 @@ trait AuthTraits
 
     public function deleteResetToken(object $token): bool
     {
-        return $token->delete();
+        if (!$token) {
+            return false;
+        }
+
+        return DB::table('password_resets')
+            ->where('email', $token->email)
+            ->where('token', $token->token)
+            ->delete();
     }
 
     public function checkTokenExpiry(object $token): bool

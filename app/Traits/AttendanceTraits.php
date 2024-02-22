@@ -6,7 +6,9 @@ use App\Mail\EmployeeAttendanceRecordMail;
 use App\Models\Attendance;
 use App\Models\Employee;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
+use OpenApi\Attributes as OA;
 
 trait AttendanceTraits
 {
@@ -30,15 +32,15 @@ trait AttendanceTraits
     public function validateDateRange(?string $start, ?string $end)
     {
         if ($start && !strtotime($start)) {
-            throw new BadRequestException('Invalid start date');
+            throw new BadRequestException('Invalid start date', 400);
         }
 
         if ($end && !strtotime($end)) {
-            throw new BadRequestException('Invalid end date');
+            throw new BadRequestException('Invalid end date', 400);
         }
 
         if ($start && $end && strtotime($start) > strtotime($end)) {
-            throw new BadRequestException('Start date cannot be greater than end date');
+            throw new BadRequestException('Start date cannot be greater than end date', 400);
         }
 
         return true;
@@ -46,7 +48,7 @@ trait AttendanceTraits
 
     public function getRefactoredAttendances(?string $start, ?string $end, ?int $limit = 20)
     {
-        Attendance::with('employee:id,names')
+        $data = Attendance::with('employee:id,names')
             ->when($start, function ($query) use ($start) {
                 $start = Carbon::parse($start)->format('Y-m-d');
                 return $query->whereDate('arrival_time', '>=', $start);
@@ -58,7 +60,9 @@ trait AttendanceTraits
             ->when($limit, function ($query) use ($limit) {
                 return $query->limit($limit);
             })
-            ->get()->map(function ($attendance) {
+            ->get();
+
+            return $data->map(function ($attendance) {
                 $employee_name = $attendance->employee->names ?? 'N/A';
                 $departure_time = $attendance->departure_time ? Carbon::parse($attendance->departure_time)->format('H:i A') : 'N/A';
                 $arrival_time = $attendance->arrival_time ? Carbon::parse($attendance->arrival_time)->format('H:i A') : 'N/A';

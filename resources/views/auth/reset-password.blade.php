@@ -5,14 +5,15 @@
     <title>Reset Password</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
 </head>
 
 <body>
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-6">
-                <div class="card" id="formCard">
-                    <div class="card-header">Admin Reset Password</div>
+    <div class="container bg-light min-vh-100">
+        <div class="row justify-content-center w-100">
+            <div class="col-md-6 col-sm-12 mt-5">
+                <div class="card mt-5" id="formCard">
+                    <div class="card-header text-center">Admin Reset Password <i class="fas fa-key"></i></div>
                     <div class="card-body">
                         <form id="resetPasswordForm" method="POST" action="{{ route('admin.password.reset') }}">
                             @csrf
@@ -39,7 +40,13 @@
                         </form>
                     </div>
                 </div>
-                <div class="card d-none" id="successCard"></div>
+                <div class="card d-none mt-5" id="successCard">
+                    <div class="card-header text-center"><i class="fas fa-check-circle text-success fa-4x"></i></div>
+                    <div class="card-body">
+                        <h5 class="text-center">Your password has been reset successfully. <br><br>
+                            <a href="{{ route('home') }}">Go Home</a></h5>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -94,8 +101,23 @@
                         $("#formCard").addClass("d-none");
                     },
                     error: function(response) {
-                        const errors = response;
-                        toastr.error(errors);
+                        const errors = response.responseJSON.errors || response.responseJSON.message;
+
+                        if (errors) {
+                            if (typeof errors === "string") {
+                                toastr.error(errors);
+                            } else {
+                                for (const key in errors) {
+                                    if (errors.hasOwnProperty(key)) {
+                                        const error = errors[key];
+                                        toastr.error(error);
+                                    }
+                                }
+                            }
+                        } else {
+                            toastr.error("An error occurred. Please try again.");
+                        }
+
                         submitBtn.text(resetPasswordTxt);
                     }
                 })

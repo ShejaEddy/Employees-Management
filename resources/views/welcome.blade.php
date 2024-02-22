@@ -8,18 +8,19 @@
     <title>Employee Management System</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('assets/style/welcome.css') }}">
 </head>
 
 <body>
-    <div class="container bg-light min-h-screen p-5">
-        <div class="row mt-5">
+    <div class="container">
+        <div class="row">
             <div class="col-md-12">
-                <h1 class="text-center">Employee Management System API</h1>
+                <h3>Employee Management System API</h3>
             </div>
         </div>
-        <div class="row mt-5">
+        <div class="row">
             <div class="col-md-12">
-                <h4 class="text-center"><i class="fas fa-home"></i> Welcome guys 😉</h1>
+                <h4><i class="fas fa-home"></i> Welcome guys 😉</h4>
             </div>
         </div>
     </div>

@@ -12,17 +12,19 @@
 
 <body>
     <div class="container bg-light min-h-screen p-5">
-        <div class="row mt-5">
-            <div class="col-md-12">
-                <h1 class="text-center">
-                    <i class="fas fa-exclamation-circle ms-2"></i>
-                    Error
-                </h1>
+        <div class="bg-dark text-white rounded p-5">
+            <div class="row mt-5">
+                <div class="col-md-12">
+                    <h3 class="text-center">
+                        <i class="fas fa-exclamation-circle ms-2"></i>
+                        Error
+                    </h3>
+                </div>
             </div>
-        </div>
-        <div class="row mt-5">
-            <div class="col-md-12">
-                <h4 class="text-center text-danger">{{ $message }}</h1>
+            <div class="row mt-4">
+                <div class="col-md-12">
+                    <h4 class="text-center text-danger">{{ $message }}</h1>
+                </div>
             </div>
         </div>
     </div>

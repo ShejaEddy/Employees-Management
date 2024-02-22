@@ -7,10 +7,39 @@ use App\Http\Requests\RegisterRequest;
 use App\Models\Admin;
 use App\Traits\BaseTraits;
 use Illuminate\Support\Facades\Hash;
+use OpenApi\Attributes as OA;
 
 class RegisterController extends Controller
 {
     use BaseTraits;
+
+    #[OA\Post(
+        tags: ["Authentication"],
+        path: "/api/admins/register",
+        description: "Register an admin",
+        requestBody: new OA\RequestBody(
+            required: true,
+            description: "Admin credentials",
+            content: new OA\JsonContent(ref: "#/components/schemas/RegisterRequest")
+        ),
+        responses: [
+            new OA\Response(
+                response: 422,
+                description: "Validation failed",
+                ref: "#/components/responses/RegisterValidationError",
+            ),
+            new OA\Response(
+                response: 200,
+                description: "Success",
+                ref: "#/components/responses/RegisterSuccess",
+            ),
+            new OA\Response(
+                response: 500,
+                description: "Internal Server Error",
+                ref: "#/components/responses/InternalServerError",
+            ),
+        ]
+    )]
 
     public function register(RegisterRequest $request)
     {
@@ -31,7 +60,6 @@ class RegisterController extends Controller
                 "user" => $admin,
                 "token" => $token
             ]);
-
         } catch (\Exception $exception) {
             return $this->respondExceptionError($exception);
         }

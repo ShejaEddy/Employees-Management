@@ -6,6 +6,8 @@ use App\Traits\BaseTraits;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use \Illuminate\Contracts\Validation\Validator;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Rule;
 
 class UpdateEmployeeRequest extends FormRequest
 {
@@ -20,9 +22,22 @@ class UpdateEmployeeRequest extends FormRequest
     {
         return [
             'names' => 'sometimes|nullable|string',
-            'email' => 'sometimes|nullable|email|unique:employees,email,except,' . $this->id,
-            'phone_number' => 'sometimes|nullable|unique:employees,email,except,' . $this->id,
-            'badge_id' => 'sometimes|nullable|string|unique:employees,email,except,' . $this->id
+            'email' => [
+                'sometimes',
+                'nullable',
+                'email',
+                Rule::unique('employees', 'email')->ignore($this->id),
+            ],
+            'phone_number' => [
+                'sometimes',
+                'nullable',
+                Rule::unique('employees', 'phone_number')->ignore($this->id),
+            ],
+            'badge_id' => [
+                'sometimes',
+                'nullable',
+                Rule::unique('employees', 'badge_id')->ignore($this->id),
+            ],
         ];
     }
 

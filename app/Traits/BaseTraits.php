@@ -5,11 +5,11 @@ namespace App\Traits;
 use Exception;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
 trait BaseTraits
 {
-
     public function respondSuccess($data = [], string $message = "Success", int $statusCode = 200): \Illuminate\Http\JsonResponse
     {
         return response()->json([
@@ -30,15 +30,18 @@ trait BaseTraits
 
     public function respondExceptionError(\Exception $exception): \Illuminate\Http\JsonResponse
     {
+        $code = (int) ($exception->getCode() ?: 500);
+
         return $this->respondError(
-            [
-                "message" => $exception->getMessage(),
-                "file" => $exception->getFile(),
-                "line" => $exception->getLine(),
-                "trace" => $exception->getTraceAsString(),
-            ],
+            $code === 500 ?
+                [
+                    "message" => $exception->getMessage(),
+                    "file" => $exception->getFile(),
+                    "line" => $exception->getLine(),
+                    "trace" => $exception->getTraceAsString(),
+                ] : [],
             $exception->getMessage(),
-            $exception->getCode()
+            $code
         );
     }
 
