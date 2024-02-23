@@ -14,7 +14,7 @@ jobs:
         image: mysql:8.0
         env:
           MYSQL_ROOT_PASSWORD: passsword
-          MYSQL_DATABASE: employee_management_test
+          MYSQL_DATABASE: employee_management
           MYSQL_USER: user
           MYSQL_PASSWORD: password
         ports:
@@ -42,6 +42,10 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y wkhtmltopdf
           sudo ln -s /usr/bin/wkhtmltopdf /usr/local/bin/wkhtmltopdf
+
+      - name: Create MySQL Database
+        run: |
+          mysql -u user -p password -e "CREATE DATABASE IF NOT EXISTS employee_management_test;"
 
       - name: Run Tests
         run: php artisan test
