@@ -51,11 +51,10 @@ it('can return error on invalid admin credentials', function () {
         ]);
 });
 
-it('can login admin with valid credentials', function () {
-    $user = Admin::factory()->create();
+it('can login admin with valid credentials', function (Admin $admin) {
 
     $response = post('/api/admins/login', [
-        'email' => $user->email,
+        'email' => $admin->email,
         'password' => 'password',
     ]);
 
@@ -65,12 +64,12 @@ it('can login admin with valid credentials', function () {
             'message' => 'Admin logged in successfully',
             'data' => [
                 'user' => [
-                    'id' => $user->id,
-                    'name' => $user->name,
-                    'email' => $user->email,
+                    'id' => $admin->id,
+                    'name' => $admin->name,
+                    'email' => $admin->email,
                 ],
                 'token' => $response['data']['token'],
             ],
         ]);
 
-});
+})->with('admin');

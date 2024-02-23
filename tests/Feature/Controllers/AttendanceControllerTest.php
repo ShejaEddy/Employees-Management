@@ -7,6 +7,7 @@ use App\Models\Employee;
 use Illuminate\Support\Facades\Mail;
 
 use function Pest\Laravel\post;
+use function Pest\Laravel\withHeader;
 
 beforeEach(function () {
     $this->admin = Admin::factory()->create();
@@ -17,12 +18,10 @@ beforeEach(function () {
 
     $this->token = $response['data']['token'];
 
-    $this->withHeader('Authorization', 'Bearer ' . $this->token);
+    withHeader('Authorization', 'Bearer ' . $this->token);
 });
 
-it('should record employee arrival attendance and Send Email to employee', function () {
-    $employee = Employee::factory()->create();
-
+it('should record employee arrival attendance and Send Email to employee', function (Employee $employee) {
     Mail::fake();
 
     $response = post("/api/employees/$employee->id/attendance/arrival");
@@ -43,11 +42,9 @@ it('should record employee arrival attendance and Send Email to employee', funct
             'status' => 200,
             'message' => 'Arrival recorded successfully',
         ]);
-});
+})->with('employee');
 
-it('should return error if employee arrival attendance is already recorded', function () {
-    $employee = Employee::factory()->create();
-
+it('should return error if employee arrival attendance is already recorded', function (Employee $employee) {
     post("/api/employees/$employee->id/attendance/arrival");
 
     $response = post("/api/employees/$employee->id/attendance/arrival");
@@ -57,7 +54,7 @@ it('should return error if employee arrival attendance is already recorded', fun
             'status' => 400,
             'message' => 'Arrival already recorded for the employee today',
         ]);
-});
+})->with('employee');
 
 it('should return error if arriving employee is not found', function () {
     $response = post('/api/employees/100/attendance/arrival');
@@ -69,9 +66,7 @@ it('should return error if arriving employee is not found', function () {
         ]);
 });
 
-it('should record employee departure attendance and Send Email to employee', function () {
-    $employee = Employee::factory()->create();
-
+it('should record employee departure attendance and Send Email to employee', function (Employee $employee) {
     post("/api/employees/$employee->id/attendance/arrival");
 
     Mail::fake();
@@ -94,7 +89,7 @@ it('should record employee departure attendance and Send Email to employee', fun
             'status' => 200,
             'message' => 'Departure recorded successfully',
         ]);
-});
+})->with('employee');
 
 it('should return error if departing employee is not found', function () {
     $response = post('/api/employees/100/attendance/departure');
@@ -106,9 +101,7 @@ it('should return error if departing employee is not found', function () {
         ]);
 });
 
-it('should return error No arrival recorded for the employee if employee departure attendance is recorded without arrival', function () {
-    $employee = Employee::factory()->create();
-
+it('should return error No arrival recorded for the employee if employee departure attendance is recorded without arrival', function (Employee $employee) {
     $response = post("/api/employees/$employee->id/attendance/departure");
 
     $response->assertStatus(400)
@@ -116,11 +109,9 @@ it('should return error No arrival recorded for the employee if employee departu
             'status' => 400,
             'message' => 'No arrival recorded for the employee',
         ]);
-});
+})->with('employee');
 
-it('should return error if employee departure attendance is already recorded', function () {
-    $employee = Employee::factory()->create();
-
+it('should return error if employee departure attendance is already recorded', function (Employee $employee) {
     post("/api/employees/$employee->id/attendance/arrival");
     post("/api/employees/$employee->id/attendance/departure");
 
@@ -131,7 +122,7 @@ it('should return error if employee departure attendance is already recorded', f
             'status' => 400,
             'message' => 'Departure already recorded for the employee today',
         ]);
-});
+})->with('employee');
 
 it('should download attendance excel report with headings', function () {
     Employee::factory(10)->create();

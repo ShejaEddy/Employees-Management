@@ -22,11 +22,7 @@ it('should validate the password confirmation field as matching', function () {
         ]);
 });
 
-it('should return Passwords do not match when password_confirmation is missing', function () {
-    $admin = Admin::factory()->create([
-        'name' => 'Sheja Eddy',
-    ]);
-
+it('should return Passwords do not match when password_confirmation is missing', function (Admin $admin) {
     $response = post('/api/admins/reset-password', [
         'email' => $admin->email,
         'password' => 'password',
@@ -41,11 +37,9 @@ it('should return Passwords do not match when password_confirmation is missing',
                 'password' => ['Passwords do not match']
             ],
         ]);
-});
+})->with('admin');
 
-it('should validate the email field as unique', function () {
-    $existingUser = Admin::factory()->create();
-
+it('should validate the email field as unique', function (Admin $existingUser) {
     $response = post('/api/admins/register', [
         'email' => $existingUser->email,
         'password' => 'password',
@@ -61,7 +55,7 @@ it('should validate the email field as unique', function () {
                 'email' => ['The email address is already in use'],
             ],
         ]);
-});
+})->with('admin');
 
 it('can register a new admin', function () {
     $response = post('/api/admins/register', [
