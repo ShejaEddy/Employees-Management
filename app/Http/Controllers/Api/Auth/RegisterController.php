@@ -8,6 +8,8 @@ use App\Models\Admin;
 use App\Traits\BaseTraits;
 use Illuminate\Support\Facades\Hash;
 use OpenApi\Attributes as OA;
+use Symfony\Component\HttpFoundation\Response;
+use Exception;
 
 class RegisterController extends Controller
 {
@@ -59,8 +61,8 @@ class RegisterController extends Controller
             return $this->respondSuccess([
                 "user" => $admin,
                 "token" => $token
-            ], 'Admin registered successfully', 201);
-        } catch (\Exception $exception) {
+            ], 'Admin registered successfully', Response::HTTP_CREATED);
+        } catch (Exception $exception) {
             return $this->respondExceptionError($exception);
         }
     }

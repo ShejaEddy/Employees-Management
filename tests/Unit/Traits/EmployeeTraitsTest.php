@@ -2,7 +2,6 @@
 
 use App\Models\Employee;
 use App\Traits\EmployeeTraits;
-use Facade\FlareClient\Http\Exceptions\NotFound;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -30,7 +29,9 @@ class EmployeeTraitsTest extends TestCase
 
     public function testThrowsErrorWhenEmployeeNotFound()
     {
-        $this->expectException(NotFound::class);
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage('Employee not found');
+        $this->expectExceptionCode(404);
 
         $this->getEmployeeById('non_existing_id', true);
     }

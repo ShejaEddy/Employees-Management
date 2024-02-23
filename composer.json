@@ -11,9 +11,11 @@
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
         "laravel/framework": "^8.75",
+        "laravel/octane": "^1.5",
         "laravel/sanctum": "^2.15",
         "laravel/tinker": "^2.5",
-        "maatwebsite/excel": "3.1.55"
+        "maatwebsite/excel": "3.1.55",
+        "spiral/roadrunner": "^2.8.2"
     },
     "require-dev": {
         "facade/ignition": "^2.5",

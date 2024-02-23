@@ -7,8 +7,9 @@ use App\Http\Requests\ForgotPasswordRequest;
 use App\Mail\ForgotPasswordMail;
 use App\Traits\AuthTraits;
 use App\Traits\BaseTraits;
-use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use OpenApi\Attributes as OA;
+use Exception;
+use Symfony\Component\HttpFoundation\Response;
 
 class ForgotPasswordController extends Controller
 {
@@ -54,7 +55,7 @@ class ForgotPasswordController extends Controller
                     $time_left = $result['time_left'];
                     $message = "You can only request a new password reset after $time_left seconds";
 
-                    throw new BadRequestException($message, 400);
+                    throw new Exception($message, Response::HTTP_BAD_REQUEST);
                 } else {
                     $this->deleteResetToken($token);
                 }
@@ -67,7 +68,7 @@ class ForgotPasswordController extends Controller
             $this->sendEmail(ForgotPasswordMail::class, $email, [$randomToken, $email]);
 
             return $this->respondSuccess([], "Password reset link has been sent to your $email. Check your email to reset your password.");
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             return $this->respondExceptionError($exception);
         }
     }

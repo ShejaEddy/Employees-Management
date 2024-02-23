@@ -9,6 +9,8 @@ use App\Models\Employee;
 use App\Traits\BaseTraits;
 use App\Traits\EmployeeTraits;
 use OpenApi\Attributes as OA;
+use Symfony\Component\HttpFoundation\Response;
+use Exception;
 
 class EmployeeController extends Controller
 {
@@ -44,7 +46,7 @@ class EmployeeController extends Controller
             $employees = Employee::paginate();
 
             return $this->respondSuccess($employees, 'Employees fetched successfully');
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             return $this->respondExceptionError($exception);
         }
     }
@@ -91,8 +93,8 @@ class EmployeeController extends Controller
             $employee->phone_number = $request->phone_number;
             $employee->save();
 
-            return $this->respondSuccess($employee, "Employee created successfully", 201);
-        } catch (\Exception $exception) {
+            return $this->respondSuccess($employee, "Employee created successfully", Response::HTTP_CREATED);
+        } catch (Exception $exception) {
             return $this->respondExceptionError($exception);
         }
     }
@@ -135,7 +137,7 @@ class EmployeeController extends Controller
             $employee = $this->getEmployeeById($id);
 
             return $this->respondSuccess($employee, "Employee details fetched successfully");
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             return $this->respondExceptionError($exception);
         }
     }
@@ -193,7 +195,7 @@ class EmployeeController extends Controller
             $employee->update($data);
 
             return $this->respondSuccess($employee, "Employee details updated successfully");
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             return $this->respondExceptionError($exception);
         }
     }
@@ -245,7 +247,7 @@ class EmployeeController extends Controller
             $employee->delete();
 
             return $this->respondSuccess([], "Employee deleted successfully");
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             return $this->respondExceptionError($exception);
         }
     }
