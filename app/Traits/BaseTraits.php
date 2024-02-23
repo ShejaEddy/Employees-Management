@@ -32,6 +32,8 @@ trait BaseTraits
     {
         $code = (int) ($exception->getCode() ?: 500);
 
+        $code = $code == 1 ? 500 : $code;
+
         return $this->respondError(
             $code === 500 ?
                 [

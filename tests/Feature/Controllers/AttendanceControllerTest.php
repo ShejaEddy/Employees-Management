@@ -183,15 +183,15 @@ it('should return error if start date is greater than end date for excel report'
         ]);
 });
 
-// it('should download attendance pdf report with date range', function () {
-//     Employee::factory(10)->create();
-//     Attendance::factory(20)->create();
-//     $response = $this->get('/api/attendance/report/pdf?from=2024-01-01&to=2024-02-31&limit=10');
+it('should download attendance pdf report with date range', function () {
+    Employee::factory(10)->create();
+    Attendance::factory(20)->create();
+    $response = $this->get('/api/attendance/report/pdf?from=2024-01-01&to=2024-02-31&limit=10');
 
-//     $response->assertStatus(200)
-//         ->assertHeader('Content-Type', 'application/pdf')
-//         ->assertHeader('Content-Disposition', 'attachment; filename=attendance_report.pdf');
-// });
+    $response->assertStatus(200)
+        ->assertHeader('Content-Type', 'application/pdf')
+        ->assertHeader('Content-Disposition', 'attachment; filename=attendance_report.pdf');
+});
 
 it('should return error if invalid start date is provided for pdf report', function () {
     $response = $this->get('/api/attendance/report/pdf?from=weird');
