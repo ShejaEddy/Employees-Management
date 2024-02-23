@@ -68,7 +68,7 @@
 
 ***Documentation:***
 
-Detailed documentation, including API reference and usage guides, can be found at **[http://localhost:8000/api/documentation This is our project API documentation]**
+Detailed documentation, including API reference and usage guides, can be found at **[http://localhost:8000/api/documentation This is our project API documentation](http://localhost:8000/api/documentation)**
 
 **Additional Notes:**
 
