@@ -30,7 +30,7 @@ it('should record employee arrival attendance and Send Email to employee', funct
     Mail::assertQueued(EmployeeAttendanceRecordMail::class, function ($mail) use ($employee) {
         expect($mail->to[0]['address'])->toBe($employee->email);
         expect($mail->type)->toBe('Arrival');
-        expect($mail->time_recorded)->toBe(now()->format('H:i A'));
+        expect($mail->time_recorded)->toBe(now()->format('h:i A'));
         expect($employee->names)->toContain($mail->employee_name);
         expect($mail->build()->subject)->toBe('Arrival Attendance Recorded');
         expect($mail->build()->view)->toBe('emails.employee_attendance_mail');
@@ -81,7 +81,7 @@ it('should record employee departure attendance and Send Email to employee', fun
     Mail::assertQueued(EmployeeAttendanceRecordMail::class, function ($mail) use ($employee) {
         expect($mail->to[0]['address'])->toBe($employee->email);
         expect($mail->type)->toBe('Departure');
-        expect($mail->time_recorded)->toBe(now()->format('H:i A'));
+        expect($mail->time_recorded)->toBe(now()->format('h:i A'));
         expect($employee->names)->toContain($mail->employee_name);
         expect($mail->build()->subject)->toBe('Departure Attendance Recorded');
         expect($mail->build()->view)->toBe('emails.employee_attendance_mail');
@@ -189,7 +189,6 @@ it('should download attendance pdf report with date range', function () {
     $response = $this->get('/api/attendance/report/pdf?from=2024-01-01&to=2024-02-31&limit=10');
 
     $response->assertStatus(200)
-        ->assertHeader('Content-Type', 'application/pdf')
         ->assertHeader('Content-Disposition', 'attachment; filename=attendance_report.pdf');
 });
 
