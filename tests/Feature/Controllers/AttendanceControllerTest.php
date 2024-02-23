@@ -30,7 +30,7 @@ it('should record employee arrival attendance and Send Email to employee', funct
     Mail::assertQueued(EmployeeAttendanceRecordMail::class, function ($mail) use ($employee) {
         expect($mail->to[0]['address'])->toBe($employee->email);
         expect($mail->type)->toBe('Arrival');
-        expect($mail->time_recorded)->toBe(now()->format('H:i A'));
+        expect($mail->time_recorded)->toBe(now()->format('h:i A'));
         expect($employee->names)->toContain($mail->employee_name);
         expect($mail->build()->subject)->toBe('Arrival Attendance Recorded');
         expect($mail->build()->view)->toBe('emails.employee_attendance_mail');
@@ -81,7 +81,7 @@ it('should record employee departure attendance and Send Email to employee', fun
     Mail::assertQueued(EmployeeAttendanceRecordMail::class, function ($mail) use ($employee) {
         expect($mail->to[0]['address'])->toBe($employee->email);
         expect($mail->type)->toBe('Departure');
-        expect($mail->time_recorded)->toBe(now()->format('H:i A'));
+        expect($mail->time_recorded)->toBe(now()->format('h:i A'));
         expect($employee->names)->toContain($mail->employee_name);
         expect($mail->build()->subject)->toBe('Departure Attendance Recorded');
         expect($mail->build()->view)->toBe('emails.employee_attendance_mail');

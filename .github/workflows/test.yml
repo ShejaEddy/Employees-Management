@@ -9,6 +9,18 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: password
+          MYSQL_DATABASE: employee_management_test
+          MYSQL_USER: user
+          MYSQL_PASSWORD: password
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
@@ -22,27 +34,18 @@ jobs:
       - name: Install Composer Dependencies
         run: composer install --prefer-dist --no-progress --no-suggest
 
+      - name: Copy .env.example
+        run: cp .env.example .env
+
+      - name: Install wkhtmltopdf
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y wkhtmltopdf
+          sudo ln -s /usr/bin/wkhtmltopdf /usr/local/bin/wkhtmltopdf
+
+      - name: Create Test Database
+        run: |
+          php artisan migrate --env=testing
+
       - name: Run Tests
         run: php artisan test
-
-      - name: Upload Test Results
-        uses: actions/upload-artifact@v2
-        with:
-          name: test-results
-          path: tests/Feature/results.xml
-
-      - name: Upload Code Coverage
-        uses: actions/upload-artifact@v2
-        with:
-          name: code-coverage
-          path: coverage-clover.xml
-
-      - name: Upload Logs
-        uses: actions/upload-artifact@v2
-        with:
-          name: logs
-          path: storage/logs/
-
-
-
-

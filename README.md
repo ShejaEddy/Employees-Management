@@ -7,8 +7,8 @@
 * **Secure Authentication:** Sanctum safeguards your API with features like registration, login, logout, password reset, and more. 
 * **Comprehensive Employee Management:** Create, read, update, and delete employee information seamlessly. Manage essential fields like names, email, employee ID, phone number, and more. 
 * **⏱️ Streamlined Attendance Tracking:** Easily record employee arrival and departure times, providing valuable insights into their activity. 
-* ** Automated Email Notifications:** Stay informed by automatically sending email alerts to employees upon recording their attendance. ✉️
-* ** Flexible Reporting & Exports:** Generate detailed attendance reports in PDF and Excel formats, empowering you to make data-driven decisions. 
+* **Automated Email Notifications:** Stay informed by automatically sending email alerts to employees upon recording their attendance. ✉️
+* **Flexible Reporting & Exports:** Generate detailed attendance reports in PDF and Excel formats, empowering you to make data-driven decisions. 
 
 **️ Requirements:**
 
@@ -19,7 +19,7 @@
 * **Mailpit:** Leverage Mailpit for local email testing during development. 
 * **wkhtmltoimage:** Generate visually appealing PDF reports with wkhtmltoimage. Update the `WKHTML_PDF_BINARY` path in `config/snappy.php`. 
 
-** Getting Started:**
+***Getting Started:***
 
 **1. Install Laravel:**
 
@@ -66,11 +66,11 @@
 
 - Install wkhtmltoimage locally and update the `WKHTML_PDF_BINARY` path in `config/snappy.php`. 
 
-** Documentation:**
+***Documentation:***
 
 Detailed documentation, including API reference and usage guides, can be found at **[http://localhost:8000/api/documentation This is our project API documentation]**
 
-** Additional Notes:**
+**Additional Notes:**
 
 - Admin credentials are: 
     - Email: admin@example.com
