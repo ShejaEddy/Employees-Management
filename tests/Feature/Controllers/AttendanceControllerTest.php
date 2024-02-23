@@ -189,6 +189,7 @@ it('should download attendance pdf report with date range', function () {
     $response = $this->get('/api/attendance/report/pdf?from=2024-01-01&to=2024-02-31&limit=10');
 
     $response->assertStatus(200)
+        ->assertHeader('Content-Type', 'application/pdf')
         ->assertHeader('Content-Disposition', 'attachment; filename=attendance_report.pdf');
 });
 

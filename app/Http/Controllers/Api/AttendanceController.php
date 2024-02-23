@@ -244,6 +244,10 @@ class AttendanceController extends Controller
 
             $pdf = SnappyPdf::loadView('reports.pdf-attendance', compact('attendances'))
                 ->download('attendance_report.pdf');
+
+            return response($pdf)
+                ->header('Content-Type', 'application/pdf')
+                ->header('Content-Disposition', 'attachment; filename=attendance_report.pdf');
         } catch (\Exception $exception) {
             return $this->respondExceptionError($exception);
         }
