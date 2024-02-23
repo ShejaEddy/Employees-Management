@@ -3,7 +3,8 @@
 namespace App\Traits;
 
 use App\Models\Employee;
-use Facade\FlareClient\Http\Exceptions\NotFound;
+use Symfony\Component\HttpFoundation\Response;
+use Exception;
 
 trait EmployeeTraits {
 
@@ -11,7 +12,7 @@ trait EmployeeTraits {
         $employee = Employee::find($id);
 
         if (empty($employee) && $throw_error){
-            throw new NotFound("Employee not found", 404);
+            throw new Exception("Employee not found", Response::HTTP_NOT_FOUND);
         }
 
         return $employee;

@@ -4,10 +4,9 @@ use App\Mail\EmployeeAttendanceRecordMail;
 use App\Models\Attendance;
 use App\Models\Employee;
 use App\Traits\AttendanceTraits;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Mail;
-use Symfony\Component\HttpFoundation\Exception\BadRequestException;
+use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 
 use function PHPUnit\Framework\assertEquals;
@@ -62,24 +61,27 @@ class AttendanceTraitsTest extends TestCase
 
     public function testValidateDateRangeWithInvalidStart()
     {
-        $this->expectException(BadRequestException::class);
+        $this->expectException(Exception::class);
         $this->expectExceptionMessage('Invalid start date');
+        $this->expectExceptionCode(Response::HTTP_BAD_REQUEST);
 
         $this->validateDateRange('invalid_date', '2024-02-24');
     }
 
     public function testValidateDateRangeWithInvalidEnd()
     {
-        $this->expectException(BadRequestException::class);
+        $this->expectException(Exception::class);
         $this->expectExceptionMessage('Invalid end date');
+        $this->expectExceptionCode(Response::HTTP_BAD_REQUEST);
 
         $this->validateDateRange('2024-02-23', 'invalid_date');
     }
 
     public function testValidateDateRangeWithStartAfterEnd()
     {
-        $this->expectException(BadRequestException::class);
+        $this->expectException(Exception::class);
         $this->expectExceptionMessage('Start date cannot be greater than end date');
+        $this->expectExceptionCode(Response::HTTP_BAD_REQUEST);
 
         $this->validateDateRange('2024-02-24', '2024-02-23');
     }

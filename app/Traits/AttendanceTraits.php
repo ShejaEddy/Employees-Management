@@ -7,7 +7,8 @@ use App\Models\Attendance;
 use App\Models\Employee;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
-use Symfony\Component\HttpFoundation\Exception\BadRequestException;
+use Symfony\Component\HttpFoundation\Response;
+use Exception;
 
 trait AttendanceTraits
 {
@@ -31,15 +32,15 @@ trait AttendanceTraits
     public function validateDateRange(?string $start, ?string $end)
     {
         if ($start && !strtotime($start)) {
-            throw new BadRequestException('Invalid start date', 400);
+            throw new Exception('Invalid start date', Response::HTTP_BAD_REQUEST);
         }
 
         if ($end && !strtotime($end)) {
-            throw new BadRequestException('Invalid end date', 400);
+            throw new Exception('Invalid end date', Response::HTTP_BAD_REQUEST);
         }
 
         if ($start && $end && strtotime($start) > strtotime($end)) {
-            throw new BadRequestException('Start date cannot be greater than end date', 400);
+            throw new Exception('Start date cannot be greater than end date', Response::HTTP_BAD_REQUEST);
         }
 
         return true;
