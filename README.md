@@ -10,6 +10,7 @@
 * **Automated Email Notifications:** Stay informed by automatically sending email alerts to employees upon recording their attendance. ✉️
 * **Flexible Reporting & Exports:** Generate detailed attendance reports in PDF and Excel formats, empowering you to make data-driven decisions.
 * **Automated Testing:** PRs are automatically tested and have to pass 100%, ensuring code quality and functionality.
+* **Laravel Octane with Roadrunner:** Laravel Octane is configured with Roadrunner to provide a high-performance, low-latency API.
 
 **️ Requirements:**
 
@@ -51,21 +52,25 @@
 
 - We have sample data, run `php artisan migrate --seed` to populate the database. 
 
-**6. Run Tests:**
+**6. Start the Server:**
+- Run `php artisan serve` to start the server normally.
+- Run `php artisan octane:start` to start the server with Octane enabled (Recommended).
+
+**7. Run Tests:**
 
 - Run `php artisan test` to ensure code quality and functionality. 
 
-**7. Start Queue Worker:**
+**8. Start Queue Worker:**
 
 - Run `php artisan queue:listen --timeout=0` to process queued jobs (e.g., email notifications). 
 
-**8. Configure Mailpit:**
+**9. Configure Mailpit:**
 
-- Install Mailpit locally and configure its settings in `.env`. 
+- Install Mailpit locally and configure its settings (port, from_address, host) in `.env` or just use the default one in `.env.example`. 
 
-**9. Configure wkhtmltoimage:**
+**10. Configure wkhtmltoimage:**
 
-- Install wkhtmltoimage locally and update the `WKHTML_PDF_BINARY` path in `config/snappy.php`. 
+- Install wkhtmltoimage locally and update the `WKHTML_PDF_BINARY` path in `config/snappy.php` or just use the default path settings. 
 
 ***Documentation:***
 
