@@ -8,7 +8,8 @@
 * **Comprehensive Employee Management:** Create, read, update, and delete employee information seamlessly. Manage essential fields like names, email, employee ID, phone number, and more. 
 * **⏱️ Streamlined Attendance Tracking:** Easily record employee arrival and departure times, providing valuable insights into their activity. 
 * **Automated Email Notifications:** Stay informed by automatically sending email alerts to employees upon recording their attendance. ✉️
-* **Flexible Reporting & Exports:** Generate detailed attendance reports in PDF and Excel formats, empowering you to make data-driven decisions. 
+* **Flexible Reporting & Exports:** Generate detailed attendance reports in PDF and Excel formats, empowering you to make data-driven decisions.
+* **Automated Testing:** PRs are automatically tested and have to pass 100%, ensuring code quality and functionality.
 
 **️ Requirements:**
 
