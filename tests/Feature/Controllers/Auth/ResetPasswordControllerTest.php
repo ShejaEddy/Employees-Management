@@ -8,9 +8,7 @@ use Illuminate\Support\Facades\Mail;
 
 use function Pest\Laravel\post;
 
-it('should return Passwords do not match when password and password_confirmation do not match', function () {
-    $admin = Admin::factory()->create();
-
+it('should return Passwords do not match when password and password_confirmation do not match', function (Admin $admin) {
     $response = post('/api/admins/reset-password', [
         'email' => $admin->email,
         'password' => 'password',
@@ -26,11 +24,9 @@ it('should return Passwords do not match when password and password_confirmation
                 'password' => ['Passwords do not match']
             ],
         ]);
-});
+})->with('admin');
 
-it('should return Passwords do not match when password_confirmation is missing', function () {
-    $admin = Admin::factory()->create();
-
+it('should return Passwords do not match when password_confirmation is missing', function (Admin $admin) {
     $response = post('/api/admins/reset-password', [
         'email' => $admin->email,
         'password' => 'password',
@@ -45,11 +41,9 @@ it('should return Passwords do not match when password_confirmation is missing',
                 'password' => ['Passwords do not match']
             ],
         ]);
-});
+})->with('admin');
 
-it('should return Invalid token when token is invalid', function () {
-    $admin = Admin::factory()->create();
-
+it('should return Invalid token when token is invalid', function (Admin $admin) {
     $response = post('/api/admins/reset-password', [
         'email' => $admin->email,
         'password' => 'password',
@@ -62,11 +56,9 @@ it('should return Invalid token when token is invalid', function () {
             'status' => 403,
             'message' => 'Invalid token',
         ]);
-});
+})->with('admin');
 
-it('should return Token has expired if token is more than 2 hours', function () {
-    $admin = Admin::factory()->create();
-
+it('should return Token has expired if token is more than 2 hours', function ($admin) {
     post('/api/admins/forgot-password', ['email' => $admin->email]);
 
     $tokens_table = DB::table('password_resets')->where('email', $admin->email)->first(['token']);
@@ -91,11 +83,9 @@ it('should return Token has expired if token is more than 2 hours', function () 
             'status' => 403,
             'message' => 'Token has expired, request a new one',
         ]);
-});
+})->with('admin');
 
-it('should reset password and send a successful email to admin', function () {
-    $admin = Admin::factory()->create();
-
+it('should reset password and send a successful email to admin', function (Admin $admin) {
     post('/api/admins/forgot-password', ['email' => $admin->email]);
 
     $tokens_table = DB::table('password_resets')->where('email', $admin->email)->first(['token']);
@@ -124,4 +114,4 @@ it('should reset password and send a successful email to admin', function () {
             'status' => 200,
             'message' => 'Password reset successfully',
         ]);
-});
+})->with('admin');

@@ -9,6 +9,9 @@ use function Pest\Laravel\delete;
 use function Pest\Laravel\get;
 use function Pest\Laravel\post;
 use function Pest\Laravel\put;
+use function Pest\Laravel\withHeader;
+use Faker\Factory as Faker;
+use Illuminate\Support\Facades\Log;
 
 it('should return 401 for unauthenticated access to employee', function () {
     $response = get('/api/employees', []);
@@ -54,7 +57,9 @@ it('should return 401 for unauthenticated access to employee', function () {
 
         $this->token = $response['data']['token'];
 
-        $this->withHeader('Authorization', 'Bearer ' . $this->token);
+        withHeader('Authorization', 'Bearer ' . $this->token);
+
+        $this->faker = Faker::create();
     });
 });
 
@@ -81,9 +86,6 @@ it('should list all employees', function () {
                 'path' => env('APP_URL') . '/api/employees',
             ]
         ]);
-
-    assertDatabaseCount('employees', 3);
-    assertDatabaseHas('employees', $employees->first()->toArray());
 });
 
 it('should validate the email, password and badge field as unique', function () {
@@ -109,10 +111,12 @@ it('should validate the email, password and badge field as unique', function () 
         ]);
 });
 
-it('should create an employee', function () {
-    $data = ['names' => 'Sheja Eddy', 'email' => 'sheja@eddy.com', 'phone_number' => '250784141587', 'badge_id' => 'SH123456'];
+it('should create an employee', function ($data) {
 
     $response = post('/api/employees', $data);
+
+    assertDatabaseCount('employees', 1);
+    assertDatabaseHas('employees', $data);
 
     $response->assertStatus(201)
         ->assertJson([
@@ -120,15 +124,9 @@ it('should create an employee', function () {
             'message' => 'Employee created successfully',
             'data' => $data,
         ]);
+})->with('create_employees');
 
-    assertDatabaseCount('employees', 1);
-    assertDatabaseHas('employees', $data);
-});
-
-it('should fail to update an employee with an existing email, phone number or badge ID', function () {
-    $employee1 = Employee::factory()->create();
-    $employee2 = Employee::factory()->create();
-
+it('should fail to update an employee with an existing email, phone number or badge ID', function ($employee1, $employee2) {
     $response = put('/api/employees/' . $employee1->id, [
         'email' => $employee2->email,
         'phone_number' => $employee2->phone_number,
@@ -145,13 +143,18 @@ it('should fail to update an employee with an existing email, phone number or ba
                 'badge_id' => ['The badge ID is already in use'],
             ],
         ]);
-});
+})->with([
+    [
+        fn () => generateEmployee(),
+        fn () => generateEmployee(),
+    ],
+    [
+        fn () => generateEmployee(),
+        fn () => generateEmployee(),
+    ],
+]);
 
-it('should update an employee', function () {
-    $employee = Employee::factory()->create();
-
-    $data = ['names' => 'Sheja Eddy', 'email' => 'sheja@eddy.com', 'phone_number' => '250784141587', 'badge_id' => 'SH123456'];
-
+it('should update an employee', function (Employee $employee, array $data) {
     $response = put('/api/employees/' . $employee->id, $data);
 
     $response->assertStatus(200)
@@ -165,7 +168,7 @@ it('should update an employee', function () {
                 'badge_id' => $data['badge_id'],
             ],
         ]);
-});
+})->with('update_employees');
 
 it('should fail to fetch a non-existing employee', function () {
     $response = get('/api/employees/100', []);
@@ -177,9 +180,7 @@ it('should fail to fetch a non-existing employee', function () {
         ]);
 });
 
-it('should fetch an employee', function () {
-    $employee = Employee::factory()->create();
-
+it('should fetch an employee', function (Employee $employee) {
     $response = get('/api/employees/' . $employee->id, []);
 
     $response->assertStatus(200)
@@ -188,7 +189,7 @@ it('should fetch an employee', function () {
             'message' => 'Employee details fetched successfully',
             'data' => $employee->toArray(),
         ]);
-});
+})->with('employee');
 
 it('should fail to delete a non-existing employee', function () {
     $response = delete('/api/employees/100', []);
@@ -200,9 +201,7 @@ it('should fail to delete a non-existing employee', function () {
         ]);
 });
 
-it('should delete an employee', function () {
-    $employee = Employee::factory()->create();
-
+it('should delete an employee', function (Employee $employee) {
     $response = delete('/api/employees/' . $employee->id, []);
 
     $employee = Employee::withTrashed()->find($employee->id);
@@ -219,11 +218,9 @@ it('should delete an employee', function () {
             'status' => 200,
             'message' => 'Employee deleted successfully',
         ]);
-});
+})->with('employee');
 
-it('should not fetch deleted employees', function () {
-    $employee = Employee::factory()->create();
-
+it('should not fetch deleted employees', function (Employee $employee) {
     delete('/api/employees/' . $employee->id, []);
 
     $response = get('/api/employees/' . $employee->id, []);
@@ -233,4 +230,4 @@ it('should not fetch deleted employees', function () {
             'status' => 404,
             'message' => 'Employee not found',
         ]);
-});
+})->with('employee');

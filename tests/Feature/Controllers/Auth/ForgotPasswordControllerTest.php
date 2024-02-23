@@ -9,9 +9,7 @@ use Illuminate\Support\Facades\Mail;
 use function Pest\Laravel\post;
 
 
-it('rejects if 60 seconds has not passed', function () {
-    $admin = Admin::factory()->create();
-
+it('rejects if 60 seconds has not passed', function (Admin $admin) {
     post('/api/admins/forgot-password', [
         'email' => $admin->email,
     ]);
@@ -25,11 +23,9 @@ it('rejects if 60 seconds has not passed', function () {
         'status' => 400,
         'message' => 'You can only request a new password reset after 60 seconds',
     ]);
-});
+})->with('admin');
 
-it('approves if 60 seconds has passed', function () {
-    $admin = Admin::factory()->create();
-
+it('approves if 60 seconds has passed', function (Admin $admin) {
     post('/api/admins/forgot-password', [
         'email' => $admin->email,
     ]);
@@ -47,10 +43,9 @@ it('approves if 60 seconds has passed', function () {
         'status' => 200,
         'message' => "Password reset link has been sent to your $admin->email. Check your email to reset your password.",
     ]);
-});
+})->with('admin');
 
-it('can request a password reset and send email to admin', function () {
-    $admin = Admin::factory()->create();
+it('can request a password reset and send email to admin', function (Admin $admin) {
     $email = $admin->email;
 
     Mail::fake();
@@ -75,4 +70,4 @@ it('can request a password reset and send email to admin', function () {
         'status' => 200,
         'message' => "Password reset link has been sent to your $email. Check your email to reset your password.",
     ]);
-});
+})->with('admin');
