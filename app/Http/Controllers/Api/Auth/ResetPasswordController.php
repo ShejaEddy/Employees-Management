@@ -8,8 +8,9 @@ use App\Mail\ResetPasswordMail;
 use App\Traits\AdminTraits;
 use App\Traits\AuthTraits;
 use App\Traits\BaseTraits;
-use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use OpenApi\Attributes as OA;
+use Symfony\Component\HttpFoundation\Response;
+use Exception;
 
 class ResetPasswordController extends Controller
 {
@@ -52,14 +53,14 @@ class ResetPasswordController extends Controller
             $token = $this->getResetTokenByEmail($email, $token_key);
 
             if (!$token) {
-                throw new BadRequestException('Invalid token', 403);
+                throw new Exception('Invalid token', Response::HTTP_FORBIDDEN);
             }
 
             $is_expired = $this->checkTokenExpiry($token);
 
             if ($is_expired) {
                 $this->deleteResetToken($token);
-                throw new BadRequestException('Token has expired, request a new one', 403);
+                throw new Exception('Token has expired, request a new one', Response::HTTP_FORBIDDEN);
             }
 
             $admin = $this->getAdminByEmail($email);
@@ -71,7 +72,7 @@ class ResetPasswordController extends Controller
             $this->sendEmail(ResetPasswordMail::class, $email);
 
             return $this->respondSuccess([], 'Password reset successfully');
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             return $this->respondExceptionError($exception);
         }
     }

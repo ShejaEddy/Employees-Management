@@ -10,10 +10,9 @@ use App\Traits\BaseTraits;
 use App\Traits\EmployeeTraits;
 use Illuminate\Http\Request;
 use Barryvdh\Snappy\Facades\SnappyPdf;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\View;
-use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use OpenApi\Attributes as OA;
+use Symfony\Component\HttpFoundation\Response;
+use Exception;
 
 class AttendanceController extends Controller
 {
@@ -56,7 +55,7 @@ class AttendanceController extends Controller
                 ->exists();
 
             if ($alreadyRecorded) {
-                throw new BadRequestException('Arrival already recorded for the employee today', 400);
+                throw new Exception('Arrival already recorded for the employee today', Response::HTTP_BAD_REQUEST);
             }
 
             $attendance = Attendance::create([
@@ -66,8 +65,8 @@ class AttendanceController extends Controller
 
             $this->sendAttendanceEmail($employee, Attendance::ATTENDANCE_ARRIVAL_TYPE);
 
-            return $this->respondSuccess($attendance, 'Arrival recorded successfully', 200);
-        } catch (\Exception $exception) {
+            return $this->respondSuccess($attendance, 'Arrival recorded successfully', Response::HTTP_OK);
+        } catch (Exception $exception) {
             return $this->respondExceptionError($exception);
         }
     }
@@ -111,7 +110,7 @@ class AttendanceController extends Controller
                 ->exists();
 
             if ($alreadyRecorded) {
-                throw new BadRequestException('Departure already recorded for the employee today', 400);
+                throw new Exception('Departure already recorded for the employee today', Response::HTTP_BAD_REQUEST);
             }
 
             $attendance = Attendance::where('employee_id', $id)
@@ -121,7 +120,7 @@ class AttendanceController extends Controller
                 ->first();
 
             if (empty($attendance)) {
-                throw new BadRequestException('No arrival recorded for the employee', 400);
+                throw new Exception('No arrival recorded for the employee', Response::HTTP_BAD_REQUEST);
             }
 
             $attendance->update([
@@ -130,8 +129,8 @@ class AttendanceController extends Controller
 
             $this->sendAttendanceEmail($employee, Attendance::ATTENDANCE_DEPARTURE_TYPE);
 
-            return $this->respondSuccess($attendance, 'Departure recorded successfully', 200);
-        } catch (\Exception $exception) {
+            return $this->respondSuccess($attendance, 'Departure recorded successfully', Response::HTTP_OK);
+        } catch (Exception $exception) {
             return $this->respondExceptionError($exception);
         }
     }
@@ -187,7 +186,7 @@ class AttendanceController extends Controller
             $attendance_report = new AttendanceReport($from, $to, $limit);
 
             return $attendance_report->download('attendance_report.xlsx');
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             return $this->respondExceptionError($exception);
         }
     }
@@ -248,7 +247,7 @@ class AttendanceController extends Controller
             return response($pdf)
                 ->header('Content-Type', 'application/pdf')
                 ->header('Content-Disposition', 'attachment; filename=attendance_report.pdf');
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             return $this->respondExceptionError($exception);
         }
     }

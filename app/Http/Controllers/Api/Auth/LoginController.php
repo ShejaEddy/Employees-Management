@@ -5,9 +5,10 @@ namespace App\Http\Controllers\Api\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
 use App\Traits\BaseTraits;
+use Exception;
 use Illuminate\Support\Facades\Auth;
-use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use OpenApi\Attributes as OA;
+use Symfony\Component\HttpFoundation\Response;
 
 class LoginController extends Controller
 {
@@ -63,8 +64,8 @@ class LoginController extends Controller
                 ], "Admin logged in successfully");
             }
 
-            throw new BadRequestException("Invalid credentials, try again", 401);
-        } catch (\Exception $exception) {
+            throw new Exception("Invalid credentials, try again", Response::HTTP_UNAUTHORIZED);
+        } catch (Exception $exception) {
             return $this->respondExceptionError($exception);
         }
     }

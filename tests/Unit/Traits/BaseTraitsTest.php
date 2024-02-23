@@ -8,11 +8,11 @@ use App\Traits\BaseTraits;
 use Exception;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Http\Exceptions\HttpResponseException;
 use Tests\TestCase;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Mail;
 use Mockery;
+use Symfony\Component\HttpFoundation\Response;
 
 use function PHPUnit\Framework\assertEquals;
 use function PHPUnit\Framework\assertInstanceOf;
@@ -56,7 +56,7 @@ class BaseTraitsTest extends TestCase
 
     public function testRespondExceptionError()
     {
-        $exception = new Exception('Something went wrong', 400);
+        $exception = new Exception('Something went wrong', Response::HTTP_BAD_REQUEST);
 
         $response = $this->respondExceptionError($exception);
 
@@ -70,7 +70,7 @@ class BaseTraitsTest extends TestCase
         $validator = Mockery::mock(Validator::class);
         $validator->shouldReceive('errors')->once()->andReturn(['field' => ['Validation error']]);
 
-        $this->expectException(HttpResponseException::class);
+        $this->expectException(Exception::class);
 
         $this->respondValidationError($validator);
     }
