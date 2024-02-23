@@ -66,7 +66,7 @@ class AttendanceController extends Controller
 
             $this->sendAttendanceEmail($employee, Attendance::ATTENDANCE_ARRIVAL_TYPE);
 
-            return $this->respondSuccess($attendance, 'Arrival recorded successfully', 201);
+            return $this->respondSuccess($attendance, 'Arrival recorded successfully', 200);
         } catch (\Exception $exception) {
             return $this->respondExceptionError($exception);
         }
@@ -130,7 +130,7 @@ class AttendanceController extends Controller
 
             $this->sendAttendanceEmail($employee, Attendance::ATTENDANCE_DEPARTURE_TYPE);
 
-            return $this->respondSuccess($attendance, 'Arrival recorded successfully', 201);
+            return $this->respondSuccess($attendance, 'Departure recorded successfully', 200);
         } catch (\Exception $exception) {
             return $this->respondExceptionError($exception);
         }

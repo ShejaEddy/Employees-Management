@@ -17,7 +17,7 @@ class EmployeeFactory extends Factory
             'names' => $this->faker->name(),
             'email' => $this->faker->unique()->safeEmail(),
             'phone_number' => $this->faker->phoneNumber(),
-            'badge_id' => $this->faker->randomNumber()
+            'badge_id' => (string) $this->faker->randomNumber(5, true)
         ];
     }
 }

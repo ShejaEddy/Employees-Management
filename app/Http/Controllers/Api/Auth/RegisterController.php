@@ -29,7 +29,7 @@ class RegisterController extends Controller
                 ref: "#/components/responses/RegisterValidationError",
             ),
             new OA\Response(
-                response: 200,
+                response: 201,
                 description: "Success",
                 ref: "#/components/responses/RegisterSuccess",
             ),
@@ -59,7 +59,7 @@ class RegisterController extends Controller
             return $this->respondSuccess([
                 "user" => $admin,
                 "token" => $token
-            ]);
+            ], 'Admin registered successfully', 201);
         } catch (\Exception $exception) {
             return $this->respondExceptionError($exception);
         }

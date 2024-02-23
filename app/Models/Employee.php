@@ -69,4 +69,9 @@ class Employee extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = ["names", "email", "phone_number", "badge_id"];
+
+    public function attendances()
+    {
+        return $this->hasMany(Attendance::class);
+    }
 }

@@ -30,6 +30,7 @@ class ResetPasswordRequest extends FormRequest
             'email.required' => 'The email address field is required',
             'email.email' => 'The email field must be a valid email address',
             'password' => 'The password field is required',
+            'password.required' => 'The password field is required',
             'password.min' => 'The password must be 6 or more characters',
             'password.confirmed' => 'Passwords do not match',
             'token.required' => 'The token field is required'

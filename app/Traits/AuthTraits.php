@@ -2,6 +2,7 @@
 namespace App\Traits;
 
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 trait AuthTraits
 {
@@ -15,10 +16,6 @@ trait AuthTraits
 
     public function getResetTokenByEmail(string $email, ?string $token_key = null): ?object
     {
-        if (!$email) {
-            return null;
-        }
-
         $token = DB::table('password_resets')
             ->where('email', $email)
             ->when($token_key, function ($query, $token_key) {
@@ -57,10 +54,10 @@ trait AuthTraits
             return true;
         }
 
-        $createdAt = strtotime($token->created_at);
+        $created_at = strtotime($token->created_at);
         $now = strtotime(now());
 
-        $differenceInSeconds = $now - $createdAt;
+        $differenceInSeconds = $now - $created_at;
         $differenceInMinutes = floor($differenceInSeconds / 60);
 
         return $differenceInMinutes > $this->expirationLimit;
@@ -75,17 +72,19 @@ trait AuthTraits
             ];
         }
 
-        $createdAt = strtotime($token->created_at);
+        $created_at = strtotime($token->created_at);
         $now = strtotime(now());
 
-        $differenceInSeconds = $now - $createdAt;
+        $differenceInSeconds = $now - $created_at;
         $differenceInMinutes = floor($differenceInSeconds / 60);
 
         $reject = $differenceInMinutes < $this->resendInterval;
 
+        $resendIntervalInSeconds = $this->resendInterval * 60;
+
         return [
             "reject" => $reject,
-            "time_left" => floor(($this->resendInterval * 60) - $differenceInSeconds)
+            "time_left" => $reject ? ($resendIntervalInSeconds - $differenceInSeconds) : 0,
         ];
     }
 }

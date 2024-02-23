@@ -17,7 +17,7 @@ class RegisterSuccess
                     new OA\Property(
                         property: "status",
                         type: "integer",
-                        example: 200
+                        example: 201
                     ),
                     new OA\Property(
                         property: "message",

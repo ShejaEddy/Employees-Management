@@ -6,9 +6,8 @@ use App\Mail\EmployeeAttendanceRecordMail;
 use App\Models\Attendance;
 use App\Models\Employee;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Collection;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
-use OpenApi\Attributes as OA;
 
 trait AttendanceTraits
 {
@@ -46,7 +45,7 @@ trait AttendanceTraits
         return true;
     }
 
-    public function getRefactoredAttendances(?string $start, ?string $end, ?int $limit = 20)
+    public function getRefactoredAttendances(?string $start = null, ?string $end = null, ?int $limit = 20): Collection
     {
         $data = Attendance::with('employee:id,names')
             ->when($start, function ($query) use ($start) {

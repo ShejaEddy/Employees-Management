@@ -26,6 +26,6 @@ class EmployeeAttendanceRecordMail extends Mailable implements ShouldQueue
     public function build()
     {
         return $this->view('emails.employee_attendance_mail')
-            ->subject('Attendance Recorded');
+            ->subject($this->type . ' Attendance Recorded');
     }
 }
